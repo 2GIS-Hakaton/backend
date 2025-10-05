@@ -1,0 +1,129 @@
+# Environment variables
+.env
+.env.local
+.env.production
+*.env
+
+# API Keys and Secrets
+backend/keys/*.key
+*.key
+*.pem
+*.crt
+*.p12
+secrets/
+credentials/
+
+# Go
+backend/vendor/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+go.work.sum
+coverage.txt
+coverage.html
+
+# Audio files (generated)
+backend/audio/
+audio/
+*.mp3
+*.wav
+*.ogg
+*.aac
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Node
+node_modules/
+dist/
+build/
+.cache/
+.next/
+.nuxt/
+out/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+
+# Compiled files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Archives
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Large data files (не коммитим большие датасеты)
+Данные ЦОДД для 2ХАКАТОН/
+Данные ЦОДД для 2ХАКАТОН.zip
+*.csv
+*.xlsx
+*.xls
+
+# Swagger generated (можно регенерировать)
+backend/docs/docs.go
+backend/docs/swagger.json
+backend/docs/swagger.yaml
+
+# Test outputs
+test_*.mp3
+route_*.mp3
+waypoint_*.mp3
+guide.mp3
+audio_*.mp3
+

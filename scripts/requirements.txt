@@ -1,0 +1,8 @@
+# Python dependencies for import scripts
+# Install with: pip3 install -r requirements.txt
+
+# PostgreSQL adapter
+psycopg2-binary==2.9.9
+
+# Alternative (requires PostgreSQL dev libraries):
+# psycopg2==2.9.9

@@ -1,0 +1,44 @@
+server:
+  port: 8080
+  host: localhost
+
+database:
+  host: 51.250.86.178
+  port: 30101
+  user: nike
+  password: changeme
+  dbname: audioguid
+  sslmode: disable
+
+gis:
+  api_base_url: https://catalog.api.2gis.com
+  routing_version: 7.0.0
+  catalog_version: 3.0
+  default_radius: 2000  # метров
+  pedestrian_speed: 83  # м/мин (5 км/ч)
+
+ai:
+  yandex_gpt_url: https://llm.api.cloud.yandex.net/foundationModels/v1/completion
+  yandex_gpt_model: yandexgpt/latest  # yandexgpt/latest или yandexgpt-lite/latest
+  yandex_tts_url: https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize
+  yandex_voice: ermil  # alena, oksana, jane, filipp, ermil, omazh
+  yandex_search_url: https://yandex.ru/search/xml
+
+epochs:
+  - id: medieval
+    name: Средневековье
+    year_from: 0
+    year_to: 1700
+  - id: imperial
+    name: Императорская Россия
+    year_from: 1700
+    year_to: 1917
+  - id: soviet
+    name: Советский период
+    year_from: 1917
+    year_to: 1991
+  - id: modern
+    name: Современность
+    year_from: 1991
+    year_to: 2024
+
