@@ -21,7 +21,7 @@ ai:
   yandex_gpt_url: https://llm.api.cloud.yandex.net/foundationModels/v1/completion
   yandex_gpt_model: yandexgpt/latest  # yandexgpt/latest или yandexgpt-lite/latest
   yandex_tts_url: https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize
-  yandex_voice: ermil  # alena, oksana, jane, filipp, ermil, omazh, zahar, marina
+  yandex_voice: ermil  # ЗАФИКСИРОВАН В КОДЕ! Всегда используется "ermil" (мужской, эмоциональный)
   yandex_search_url: https://yandex.ru/search/xml
 
 epochs:

@@ -24,7 +24,7 @@ func NewTTSService() *TTSService {
 		apiKey:   os.Getenv("YANDEX_API_KEY"),
 		folderID: os.Getenv("YANDEX_FOLDER_ID"),
 		baseURL:  "https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize",
-		voice:    getVoice(),
+		voice:    "ermil", // Фиксированный голос Ermil (мужской, эмоциональный)
 		client:   &http.Client{},
 	}
 }
@@ -95,17 +95,10 @@ func (s *TTSService) GenerateAudio(text, filename string) (string, int, error) {
 	return audioPath, durationSeconds, nil
 }
 
-// getVoice возвращает голос из переменной окружения или дефолтный
-func getVoice() string {
-	voice := os.Getenv("YANDEX_VOICE")
-	if voice == "" {
-		// Дефолтный голос - женский, приятный
-		return "ermil"
-	}
-	return voice
-}
-
+// Голос зафиксирован на "ermil" (мужской, эмоциональный)
+// Если нужно изменить голос, измените значение в NewTTSService()
+//
 // Доступные голоса Yandex SpeechKit:
 // Женские: alena (мягкий), oksana (нейтральный), jane (эмоциональный)
-// Мужские: filipp (нейтральный), ermil (эмоциональный), omazh (глубокий)
+// Мужские: filipp (нейтральный), ermil (эмоциональный), omazh (глубокий), zahar (спокойный)
 // Premium: marina (премиум женский), alexander (премиум мужской)
