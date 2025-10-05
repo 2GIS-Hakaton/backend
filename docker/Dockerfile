@@ -16,6 +16,5 @@ RUN apk update && apk add --no-cache libc6-compat curl && rm -rf /var/cache/apk/
 
 COPY --from=builder /out/application ./
 
-USER guest
 EXPOSE 8080
 CMD ["./application"]
