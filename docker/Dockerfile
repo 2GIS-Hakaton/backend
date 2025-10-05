@@ -7,7 +7,7 @@ RUN --mount=type=bind,source=go.mod,target=/build/go.mod \
     go mod download && go mod verify 
 
 COPY . .
-RUN go build -o /out/application cmd/server/
+RUN go build -o /out/application ./cmd/server/
 
 FROM docker.io/alpine:3.21 AS runner
 WORKDIR /app
