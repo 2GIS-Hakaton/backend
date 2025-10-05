@@ -6,15 +6,15 @@ RUN --mount=type=bind,source=go.mod,target=/build/go.mod \
     --mount=type=bind,source=go.sum,target=/build/go.sum  \
     go mod download && go mod verify 
 
-COPY ../src .
-RUN go build -o bin/application .
+COPY . .
+RUN go build -o /out/application .
 
 FROM docker.io/alpine:3.21 AS runner
 WORKDIR /app
 
 RUN apk update && apk add --no-cache libc6-compat curl && rm -rf /var/cache/apk/*
 
-COPY --from=builder /build/bin/application ./
+COPY --from=builder /out/application ./
 
 USER guest
 EXPOSE 8080

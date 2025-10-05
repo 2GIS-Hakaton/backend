@@ -26,7 +26,7 @@ jobs:
             - name: build image
               uses: docker/build-push-action@v6
               with:
-                  context: .
+                  context: backend/
                   file: docker/Dockerfile
                   push: true
                   tags: ghcr.io/2gis-hakaton/app:latest
