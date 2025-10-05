@@ -29,4 +29,4 @@ jobs:
                   context: backend/
                   file: docker/Dockerfile
                   push: true
-                  tags: ghcr.io/2gis-hakaton/app:latest
+                  tags: ghcr.io/2gis-hakaton/backend:latest
