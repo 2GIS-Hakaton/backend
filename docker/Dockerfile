@@ -14,7 +14,6 @@ WORKDIR /app
 
 RUN apk update && apk add --no-cache libc6-compat curl && rm -rf /var/cache/apk/*
 
-COPY ./healthcheck.sh .
 COPY --from=builder /build/bin/application ./
 
 USER guest
