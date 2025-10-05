@@ -1,0 +1,14 @@
+.dockerignore
+Dockerfile
+*.git*
+*.env
+
+*.idea/
+*.vscode/
+*.devcontainer/
+
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
