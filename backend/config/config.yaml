@@ -8,7 +8,7 @@ database:
   user: nike
   password: changeme
   dbname: audioguid
-  sslmode: disable
+  sslmode: disablfr
 
 gis:
   api_base_url: https://catalog.api.2gis.com
@@ -21,7 +21,7 @@ ai:
   yandex_gpt_url: https://llm.api.cloud.yandex.net/foundationModels/v1/completion
   yandex_gpt_model: yandexgpt/latest  # yandexgpt/latest или yandexgpt-lite/latest
   yandex_tts_url: https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize
-  yandex_voice: ermil  # alena, oksana, jane, filipp, ermil, omazh
+  yandex_voice: ermil  # alena, oksana, jane, filipp, ermil, omazh, zahar, marina
   yandex_search_url: https://yandex.ru/search/xml
 
 epochs:

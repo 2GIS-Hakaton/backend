@@ -13,7 +13,7 @@
 
 ```bash
 # 1. Установить переменные
-export DATABASE_URL="postgresql://nike:changeme@51.250.86.178:30101/audioguid?sslmode=disable"
+export DATABASE_URL="postgresql://nike:<password>@51.250.86.178:<port>/audioguid?sslmode=disable"
 export YANDEX_API_KEY="your-key"
 export YANDEX_FOLDER_ID="your-folder"
 
@@ -39,6 +39,7 @@ afplay route_guide.mp3
 
 ### 🎯 Начните здесь
 - **[GETTING_STARTED.md](GETTING_STARTED.md)** - 🚀 Полное руководство по запуску
+- **[CUSTOM_POIS_GUIDE.md](CUSTOM_POIS_GUIDE.md)** - 📍 Свои места для аудиогида ⭐ НОВОЕ
 - **[FINAL_SETUP.md](FINAL_SETUP.md)** - ✅ Финальная настройка и исправления
 - **[Swagger UI](http://localhost:8080/swagger/index.html)** - 🔧 Интерактивная API документация
 
@@ -55,11 +56,12 @@ afplay route_guide.mp3
 
 ### ✅ Что уже работает
 
-- **🗺️ Генерация маршрутов** - создание персонализированных пешеходных маршрутов
-- **📍 12 POI в базе** - исторические места Москвы (советская эпоха, средневековье)
+- **🗺️ Генерация маршрутов** - 3 способа: автопоиск, конкретные места, свои координаты
+- **📍 Свои места** - создавайте аудиогиды по своим любимым местам ⭐ НОВОЕ
 - **🔍 Умный поиск** - фильтрация по эпохам и категориям
 - **📊 PostgreSQL** - надежное хранение данных
 - **🌐 REST API** - простой и понятный интерфейс
+- **📖 Swagger UI** - интерактивная документация API
 
 ### ⚡ С Yandex API ключами
 
@@ -336,7 +338,7 @@ GET /api/routes/{route_id}
 ### Минимальная конфигурация (без Yandex)
 
 ```bash
-export DATABASE_URL="postgresql://nike:changeme@51.250.86.178:30101/audioguid?sslmode=disable"
+export DATABASE_URL="postgresql://nike:<password>@51.250.86.178:<port>/audioguid?sslmode=disable"
 ```
 
 **Работает:**
@@ -352,7 +354,7 @@ export DATABASE_URL="postgresql://nike:changeme@51.250.86.178:30101/audioguid?ss
 
 ```bash
 # База данных
-export DATABASE_URL="postgresql://nike:changeme@51.250.86.178:30101/audioguid?sslmode=disable"
+export DATABASE_URL="postgresql://nike:<password>@51.250.86.178:<port>/audioguid?sslmode=disable"
 
 # Yandex Cloud
 export YANDEX_API_KEY="AQVN..."
@@ -434,7 +436,7 @@ curl -X POST http://localhost:8080/api/routes/generate \
 lsof -ti:8080 | xargs kill -9
 
 # Проверить БД
-PGPASSWORD=changeme psql -h 51.250.86.178 -p 30101 -U nike -d audioguid -c "SELECT 1;"
+PGPASSWORD=<password> psql -h 51.250.86.178 -p <port> -U nike -d audioguid -c "SELECT 1;"
 ```
 
 ### "No POIs found"

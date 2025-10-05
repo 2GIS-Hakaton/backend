@@ -191,7 +191,7 @@ curl -X POST /api/routes/generate-audio -d '{...}' -o guide.mp3
 
 ```bash
 # База данных
-export DATABASE_URL="postgresql://user:pass@host:30101/db?sslmode=disable"
+export DATABASE_URL="postgresql://user:pass@host:<port>/db?sslmode=disable"
 
 # Yandex Cloud (для генерации аудио)
 export YANDEX_API_KEY="AQVN..."

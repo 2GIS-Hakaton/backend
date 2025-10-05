@@ -6,7 +6,7 @@
 
 ```bash
 cd backend
-export DATABASE_URL="postgresql://nike:changeme@51.250.86.178:30101/audioguid?sslmode=disable"
+export DATABASE_URL="postgresql://nike:<password>@51.250.86.178:<port>/audioguid?sslmode=disable"
 go run cmd/server/main.go
 ```
 

@@ -9,22 +9,22 @@ import (
 
 // POI (Point of Interest) - место интереса
 type POI struct {
-	ID           uuid.UUID              `gorm:"type:uuid;primary_key;default:gen_random_uuid()" json:"id"`
-	Name         string                 `gorm:"not null" json:"name"`
-	Description  string                 `gorm:"type:text" json:"description"`
-	Latitude     float64                `gorm:"not null" json:"latitude"`
-	Longitude    float64                `gorm:"not null" json:"longitude"`
-	Epoch        string                 `gorm:"index" json:"epoch"`        // medieval, imperial, soviet, modern
-	Category     string                 `gorm:"index" json:"category"`     // architecture, history, culture, religion, art
-	Importance   int                    `gorm:"default:5" json:"importance"` // 1-10
-	YearBuilt    int                    `json:"year_built,omitempty"`
-	Architect    string                 `json:"architect,omitempty"`
-	Style        string                 `json:"style,omitempty"`
-	Photos       pq.StringArray         `gorm:"type:text[]" json:"photos" swaggertype:"array,string"`
-	WikipediaURL string                 `json:"wikipedia_url,omitempty"`
+	ID           uuid.UUID               `gorm:"type:uuid;primary_key;default:gen_random_uuid()" json:"id"`
+	Name         string                  `gorm:"not null" json:"name"`
+	Description  string                  `gorm:"type:text" json:"description"`
+	Latitude     float64                 `gorm:"not null" json:"latitude"`
+	Longitude    float64                 `gorm:"not null" json:"longitude"`
+	Epoch        string                  `gorm:"index" json:"epoch"`          // medieval, imperial, soviet, modern
+	Category     string                  `gorm:"index" json:"category"`       // architecture, history, culture, religion, art
+	Importance   int                     `gorm:"default:5" json:"importance"` // 1-10
+	YearBuilt    int                     `json:"year_built,omitempty"`
+	Architect    string                  `json:"architect,omitempty"`
+	Style        string                  `json:"style,omitempty"`
+	Photos       pq.StringArray          `gorm:"type:text[]" json:"photos" swaggertype:"array,string"`
+	WikipediaURL string                  `json:"wikipedia_url,omitempty"`
 	Metadata     *map[string]interface{} `gorm:"type:jsonb" json:"metadata,omitempty" swaggerignore:"true"`
-	CreatedAt    time.Time              `json:"created_at"`
-	UpdatedAt    time.Time              `json:"updated_at"`
+	CreatedAt    time.Time               `json:"created_at"`
+	UpdatedAt    time.Time               `json:"updated_at"`
 }
 
 // TableName overrides the default table name (optional, pois is default)
@@ -76,6 +76,19 @@ type RouteRequest struct {
 	Epochs          []string `json:"epochs"`
 	Interests       []string `json:"interests"`
 	MaxWaypoints    int      `json:"max_waypoints"`
+	// Конкретные места для маршрута (опционально)
+	POIIDs     []string    `json:"poi_ids,omitempty"`     // UUID мест из базы
+	CustomPOIs []CustomPOI `json:"custom_pois,omitempty"` // Свои места с координатами
+}
+
+// CustomPOI - пользовательское место для маршрута
+type CustomPOI struct {
+	Name        string  `json:"name" binding:"required"`
+	Description string  `json:"description"`
+	Latitude    float64 `json:"latitude" binding:"required"`
+	Longitude   float64 `json:"longitude" binding:"required"`
+	Epoch       string  `json:"epoch,omitempty"`
+	Category    string  `json:"category,omitempty"`
 }
 
 // Point - географическая точка

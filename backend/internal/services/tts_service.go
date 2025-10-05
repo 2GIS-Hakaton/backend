@@ -100,7 +100,7 @@ func getVoice() string {
 	voice := os.Getenv("YANDEX_VOICE")
 	if voice == "" {
 		// Дефолтный голос - женский, приятный
-		return "alena"
+		return "ermil"
 	}
 	return voice
 }

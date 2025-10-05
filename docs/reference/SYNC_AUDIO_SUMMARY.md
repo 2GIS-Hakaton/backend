@@ -93,7 +93,7 @@ afplay my_guide.mp3
 ```bash
 # 1. Запустить сервер
 cd backend
-export DATABASE_URL="postgresql://nike:changeme@51.250.86.178:30101/audioguid?sslmode=disable"
+export DATABASE_URL="postgresql://nike:<password>@51.250.86.178:<port>/audioguid?sslmode=disable"
 export YANDEX_API_KEY="your-key"
 export YANDEX_FOLDER_ID="your-folder"
 go run cmd/server/main.go

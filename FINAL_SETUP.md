@@ -2,7 +2,7 @@
 
 ## 🔧 Что было исправлено
 
-1. **✅ Порт БД** - Обновлен с 5432 на **30101**
+1. **✅ Порт БД** - Обновлен с 5432 на **<port>**
 2. **✅ Скрипт импорта** - Исправлено название таблицы `places_of_interest` → `pois`
 3. **✅ TTS сервис** - Исправлено кодирование URL параметров (символы `\n` теперь кодируются правильно)
 4. **✅ POI импортированы** - 12 тестовых мест в базе
@@ -16,7 +16,7 @@
 ### Шаг 1: Установить переменные окружения
 
 ```bash
-export DATABASE_URL="postgresql://nike:changeme@51.250.86.178:30101/audioguid?sslmode=disable"
+export DATABASE_URL="postgresql://nike:<password>@51.250.86.178:<port>/audioguid?sslmode=disable"
 export YANDEX_API_KEY="your-yandex-api-key"
 export YANDEX_FOLDER_ID="your-yandex-folder-id"
 ```
@@ -76,7 +76,7 @@ afplay route_guide.mp3
 
 ```bash
 # Установить переменные
-export DATABASE_URL="postgresql://nike:changeme@51.250.86.178:30101/audioguid?sslmode=disable"
+export DATABASE_URL="postgresql://nike:<password>@51.250.86.178:<port>/audioguid?sslmode=disable"
 export YANDEX_API_KEY="your-key"
 export YANDEX_FOLDER_ID="your-folder"
 
@@ -116,11 +116,11 @@ export YANDEX_FOLDER_ID="your-folder"
 
 ```bash
 # Проверить количество POI
-PGPASSWORD=changeme psql -h 51.250.86.178 -p 30101 -U nike -d audioguid -c "SELECT COUNT(*) FROM pois;"
+PGPASSWORD=<password> psql -h 51.250.86.178 -p <port> -U nike -d audioguid -c "SELECT COUNT(*) FROM pois;"
 
 # Если 0, импортировать
 cd scripts
-export DATABASE_URL="postgresql://nike:changeme@51.250.86.178:30101/audioguid?sslmode=disable"
+export DATABASE_URL="postgresql://nike:<password>@51.250.86.178:<port>/audioguid?sslmode=disable"
 python3 import_sample_pois.py
 ```
 
@@ -141,7 +141,7 @@ export YANDEX_FOLDER_ID="your-folder"
 lsof -ti:8080 | xargs kill -9
 
 # Проверить подключение к БД
-PGPASSWORD=changeme psql -h 51.250.86.178 -p 30101 -U nike -d audioguid -c "SELECT 1;"
+PGPASSWORD=<password> psql -h 51.250.86.178 -p <port> -U nike -d audioguid -c "SELECT 1;"
 ```
 
 ---
@@ -178,7 +178,7 @@ http://localhost:8080/swagger/index.html
 ### ✅ База данных
 
 - **12 POI** в базе
-- **Порт:** 30101
+- **Порт:** <port>
 - **Таблицы:** pois, routes, waypoints, contents
 
 ### ✅ Документация
@@ -242,7 +242,7 @@ curl -X POST http://localhost:8080/api/routes/generate-audio \
 
 Все исправлено и готово к работе:
 
-- ✅ Правильный порт БД (30101)
+- ✅ Правильный порт БД (<port>)
 - ✅ POI импортированы
 - ✅ TTS сервис исправлен
 - ✅ Swagger UI работает
@@ -266,7 +266,7 @@ cd backend
 
 # Пересоздать POI
 cd scripts
-export DATABASE_URL="postgresql://nike:changeme@51.250.86.178:30101/audioguid?sslmode=disable"
+export DATABASE_URL="postgresql://nike:<password>@51.250.86.178:<port>/audioguid?sslmode=disable"
 python3 import_sample_pois.py
 ```
 

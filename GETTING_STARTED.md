@@ -21,7 +21,7 @@
 
 ```bash
 # 1. Установить переменные окружения
-export DATABASE_URL="postgresql://nike:changeme@51.250.86.178:30101/audioguid?sslmode=disable"
+export DATABASE_URL="postgresql://nike:<password>@51.250.86.178:<port>/audioguid?sslmode=disable"
 export YANDEX_API_KEY="your-yandex-api-key"
 export YANDEX_FOLDER_ID="your-yandex-folder-id"
 
@@ -88,14 +88,14 @@ pip3 install -r requirements.txt
 ### 4. Проверить подключение к БД
 
 ```bash
-PGPASSWORD=changeme psql -h 51.250.86.178 -p 30101 -U nike -d audioguid -c "SELECT 1;"
+PGPASSWORD=<password> psql -h 51.250.86.178 -p <port> -U nike -d audioguid -c "SELECT 1;"
 ```
 
 ### 5. Импортировать тестовые POI
 
 ```bash
 cd scripts
-export DATABASE_URL="postgresql://nike:changeme@51.250.86.178:30101/audioguid?sslmode=disable"
+export DATABASE_URL="postgresql://nike:<password>@51.250.86.178:<port>/audioguid?sslmode=disable"
 python3 import_sample_pois.py
 ```
 
@@ -116,7 +116,7 @@ python3 import_sample_pois.py
 
 ```bash
 # База данных
-DATABASE_URL=postgresql://nike:changeme@51.250.86.178:30101/audioguid?sslmode=disable
+DATABASE_URL=postgresql://nike:<password>@51.250.86.178:<port>/audioguid?sslmode=disable
 
 # Yandex Cloud (для генерации аудио)
 YANDEX_API_KEY=AQVN...
@@ -147,7 +147,7 @@ PORT=8080
 
 ```bash
 cd backend
-export DATABASE_URL="postgresql://nike:changeme@51.250.86.178:30101/audioguid?sslmode=disable"
+export DATABASE_URL="postgresql://nike:<password>@51.250.86.178:<port>/audioguid?sslmode=disable"
 export YANDEX_API_KEY="your-key"
 export YANDEX_FOLDER_ID="your-folder"
 go run cmd/server/main.go
@@ -303,7 +303,7 @@ lsof -ti:8080 | xargs kill -9
 
 ```bash
 # Проверить подключение
-PGPASSWORD=changeme psql -h 51.250.86.178 -p 30101 -U nike -d audioguid -c "SELECT 1;"
+PGPASSWORD=<password> psql -h 51.250.86.178 -p <port> -U nike -d audioguid -c "SELECT 1;"
 
 # Проверить переменную окружения
 echo $DATABASE_URL
@@ -317,7 +317,7 @@ echo $DATABASE_URL
 
 ```bash
 cd scripts
-export DATABASE_URL="postgresql://nike:changeme@51.250.86.178:30101/audioguid?sslmode=disable"
+export DATABASE_URL="postgresql://nike:<password>@51.250.86.178:<port>/audioguid?sslmode=disable"
 python3 import_sample_pois.py
 ```
 
@@ -337,7 +337,7 @@ curl -X POST http://localhost:8080/api/routes/generate-audio \
 **Решение 3:** Проверить количество POI
 
 ```bash
-PGPASSWORD=changeme psql -h 51.250.86.178 -p 30101 -U nike -d audioguid -c "SELECT COUNT(*) FROM pois;"
+PGPASSWORD=<password> psql -h 51.250.86.178 -p <port> -U nike -d audioguid -c "SELECT COUNT(*) FROM pois;"
 ```
 
 ### Ошибка "YANDEX_API_KEY not set"
@@ -500,7 +500,7 @@ curl -X POST http://localhost:8080/api/routes/generate-audio \
 ## ✅ Чеклист запуска
 
 - [ ] Go 1.21+ установлен
-- [ ] PostgreSQL доступен (порт 30101)
+- [ ] PostgreSQL доступен (порт <port>)
 - [ ] Python 3.8+ установлен
 - [ ] Зависимости Go установлены (`go mod download`)
 - [ ] Зависимости Python установлены (`pip3 install -r requirements.txt`)

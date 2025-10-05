@@ -39,11 +39,11 @@ func NewRouteHandler(
 
 // GenerateRoute создает новый маршрут
 // @Summary      Создать маршрут (асинхронно)
-// @Description  Создает маршрут с точками интереса. Аудио генерируется асинхронно в фоне.
+// @Description  Создает маршрут с точками интереса. Аудио генерируется асинхронно в фоне. Поддерживает 3 режима: автопоиск, конкретные POI ID, свои места.
 // @Tags         routes
 // @Accept       json
 // @Produce      json
-// @Param        request body models.RouteRequest true "Параметры маршрута"
+// @Param        request body models.RouteRequest true "Параметры маршрута (можно указать poi_ids или custom_pois)"
 // @Success      200 {object} models.RouteResponse
 // @Failure      400 {object} map[string]string
 // @Failure      404 {object} map[string]string
@@ -56,38 +56,56 @@ func (h *RouteHandler) GenerateRoute(c *gin.Context) {
 		return
 	}
 
-	// Определяем радиус поиска на основе длительности
-	// Средняя скорость пешехода: 83 м/мин
-	radius := float64(req.DurationMinutes * 83)
-	if radius > 5000 {
-		radius = 5000 // Максимум 5 км
-	}
+	// Получаем точки интереса
+	var pois []models.POI
+	var err error
 
-	// Находим точки интереса
-	pois, err := h.poiService.FindNearby(
-		req.StartPoint.Lat,
-		req.StartPoint.Lon,
-		radius,
-		req.Epochs,
-		req.Interests,
-	)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to find POIs"})
-		return
+	// Вариант 1: Конкретные POI ID из базы
+	if len(req.POIIDs) > 0 {
+		pois, err = h.getPOIsByIDs(req.POIIDs)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+	} else if len(req.CustomPOIs) > 0 {
+		// Вариант 2: Пользовательские места (создаем новые POI)
+		pois, err = h.createCustomPOIs(req.CustomPOIs)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+	} else {
+		// Вариант 3: Автоматический поиск по критериям
+		radius := float64(req.DurationMinutes * 83)
+		if radius > 5000 {
+			radius = 5000
+		}
+
+		pois, err = h.poiService.FindNearby(
+			req.StartPoint.Lat,
+			req.StartPoint.Lon,
+			radius,
+			req.Epochs,
+			req.Interests,
+		)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to find POIs"})
+			return
+		}
+
+		// Ограничиваем количество точек только для автопоиска
+		maxPoints := req.MaxWaypoints
+		if maxPoints == 0 || maxPoints > 10 {
+			maxPoints = 5
+		}
+		if len(pois) > maxPoints {
+			pois = pois[:maxPoints]
+		}
 	}
 
 	if len(pois) == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"error": "No POIs found matching criteria"})
 		return
-	}
-
-	// Ограничиваем количество точек
-	maxPoints := req.MaxWaypoints
-	if maxPoints == 0 || maxPoints > 10 {
-		maxPoints = 5
-	}
-	if len(pois) > maxPoints {
-		pois = pois[:maxPoints]
 	}
 
 	// Создаем маршрут в БД
@@ -225,11 +243,11 @@ func (h *RouteHandler) GetPOI(c *gin.Context) {
 
 // GenerateRouteWithAudio создает маршрут и сразу генерирует аудио (синхронно)
 // @Summary      Создать маршрут и получить MP3 (синхронно)
-// @Description  Создает маршрут, генерирует аудио для всех точек и возвращает готовый MP3 файл. Занимает 2-5 минут.
+// @Description  Создает маршрут, генерирует аудио для всех точек и возвращает готовый MP3 файл. Занимает 2-5 минут. Поддерживает 3 режима: автопоиск, конкретные POI ID, свои места с координатами.
 // @Tags         routes
 // @Accept       json
 // @Produce      audio/mpeg
-// @Param        request body models.RouteRequest true "Параметры маршрута"
+// @Param        request body models.RouteRequest true "Параметры маршрута (можно указать poi_ids или custom_pois)"
 // @Success      200 {file} audio/mpeg "MP3 файл с аудиогидом"
 // @Failure      400 {object} map[string]string
 // @Failure      404 {object} map[string]string
@@ -242,37 +260,52 @@ func (h *RouteHandler) GenerateRouteWithAudio(c *gin.Context) {
 		return
 	}
 
-	// Определяем радиус поиска на основе длительности
-	radius := float64(req.DurationMinutes * 83)
-	if radius > 5000 {
-		radius = 5000
-	}
+	// Получаем точки интереса (используем ту же логику)
+	var pois []models.POI
+	var err error
 
-	// Находим точки интереса
-	pois, err := h.poiService.FindNearby(
-		req.StartPoint.Lat,
-		req.StartPoint.Lon,
-		radius,
-		req.Epochs,
-		req.Interests,
-	)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to find POIs"})
-		return
+	if len(req.POIIDs) > 0 {
+		pois, err = h.getPOIsByIDs(req.POIIDs)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+	} else if len(req.CustomPOIs) > 0 {
+		pois, err = h.createCustomPOIs(req.CustomPOIs)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+	} else {
+		radius := float64(req.DurationMinutes * 83)
+		if radius > 5000 {
+			radius = 5000
+		}
+
+		pois, err = h.poiService.FindNearby(
+			req.StartPoint.Lat,
+			req.StartPoint.Lon,
+			radius,
+			req.Epochs,
+			req.Interests,
+		)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to find POIs"})
+			return
+		}
+
+		maxPoints := req.MaxWaypoints
+		if maxPoints == 0 || maxPoints > 10 {
+			maxPoints = 5
+		}
+		if len(pois) > maxPoints {
+			pois = pois[:maxPoints]
+		}
 	}
 
 	if len(pois) == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"error": "No POIs found matching criteria"})
 		return
-	}
-
-	// Ограничиваем количество точек
-	maxPoints := req.MaxWaypoints
-	if maxPoints == 0 || maxPoints > 10 {
-		maxPoints = 5
-	}
-	if len(pois) > maxPoints {
-		pois = pois[:maxPoints]
 	}
 
 	// Создаем маршрут в БД
@@ -624,4 +657,56 @@ func generateRouteName(epochs []string, interests []string) string {
 	}
 
 	return name
+}
+
+// getPOIsByIDs получает POI по их ID
+func (h *RouteHandler) getPOIsByIDs(ids []string) ([]models.POI, error) {
+	var pois []models.POI
+	
+	// Конвертируем строки в UUID
+	uuids := make([]uuid.UUID, 0, len(ids))
+	for _, id := range ids {
+		uid, err := uuid.Parse(id)
+		if err != nil {
+			return nil, fmt.Errorf("invalid POI ID: %s", id)
+		}
+		uuids = append(uuids, uid)
+	}
+	
+	// Получаем POI из базы в том же порядке
+	for _, uid := range uuids {
+		var poi models.POI
+		if err := h.db.First(&poi, "id = ?", uid).Error; err != nil {
+			return nil, fmt.Errorf("POI not found: %s", uid)
+		}
+		pois = append(pois, poi)
+	}
+	
+	return pois, nil
+}
+
+// createCustomPOIs создает временные POI из пользовательских данных
+func (h *RouteHandler) createCustomPOIs(customPOIs []models.CustomPOI) ([]models.POI, error) {
+	pois := make([]models.POI, 0, len(customPOIs))
+	
+	for _, custom := range customPOIs {
+		poi := models.POI{
+			Name:        custom.Name,
+			Description: custom.Description,
+			Latitude:    custom.Latitude,
+			Longitude:   custom.Longitude,
+			Epoch:       custom.Epoch,
+			Category:    custom.Category,
+			Importance:  5, // Средняя важность
+		}
+		
+		// Сохраняем в базу
+		if err := h.db.Create(&poi).Error; err != nil {
+			return nil, fmt.Errorf("failed to create custom POI: %w", err)
+		}
+		
+		pois = append(pois, poi)
+	}
+	
+	return pois, nil
 }
